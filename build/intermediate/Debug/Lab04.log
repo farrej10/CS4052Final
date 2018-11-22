@@ -1,8 +1,3 @@
-﻿  main.cpp
-z:\cs4052\cs4052final\lab04\main.cpp(219): warning C4018: '<': signed/unsigned mismatch
-z:\cs4052\cs4052final\lab04\main.cpp(239): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
-z:\cs4052\cs4052final\lab04\main.cpp(292): warning C4018: '<': signed/unsigned mismatch
-z:\cs4052\cs4052final\lab04\main.cpp(296): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-z:\cs4052\cs4052final\lab04\main.cpp(310): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  Camera.cpp
   Lab04.vcxproj -> Z:\CS4052\CS4052Final\\build\executables\Debug\Lab 04.exe
   Lab04.vcxproj -> Z:\CS4052\CS4052Final\\build\executables\Debug\Lab 04.pdb (Partial PDB)

@@ -242,18 +242,34 @@ void updateScene() {
 	//every 20ms(50fps) ish check for collision;
 	if (delta >= 20)
 	{
-
+		
 		if (camera->xyzPos.v[1] > -1.5f)
 		{
 			camera->xyzPos.v[1] = -1.5f;
 		}
+		if (camera->xyzPos.v[0] < -14.5f)
+		{
+			camera->xyzPos.v[0] = -14.5f;
+		}
+		if (camera->xyzPos.v[0] > 14.5f)
+		{
+			camera->xyzPos.v[0] = 14.5f;
+		}
+		if (camera->xyzPos.v[2] < -14.5f)
+		{
+			camera->xyzPos.v[2] = -14.5f;
+		}
+		if (camera->xyzPos.v[2] > 14.5f)
+		{
+			camera->xyzPos.v[2] = 14.5f;
+		}
 		camera->translate_y(0.05f);
 		camera->update();
-		//printf("%f y pos\n", camera->xyzPos.v[1]);
 		last_time = curr_time;
+		printf("%f %f %f xyz pos\n", camera->xyzPos.v[0], camera->xyzPos.v[1], camera->xyzPos.v[2]);
 	}
 
-	
+
 
 		
 
@@ -286,7 +302,7 @@ void init()
 	vec3 offset(0.0f, 2.5f, 0.0f);
 	vec3 degOffset(0.0f, 0.0f, 0.0f);
 	mat4 tempPer = identity_mat4();
-	tempPer = translate(tempPer, vec3(0.0, -5.0, -25.0f));
+	tempPer = translate(tempPer, vec3(0.0, 0.0, 0.0f));
 	camera = new Camera(tempPer, perspective(70.0f, (float)width / (float)height, 0.1f, 1000.0f));
 	terrain = new GameObject(first,4);
 	for (int i = 0; i < gameObjectList.size(); i++)
