@@ -39,6 +39,7 @@ public:
 	//constructors
 	GameObject();
 	GameObject(Model *newModel,int textureID);
+	GameObject::GameObject(Model *newModel, int textureIDnew, vec3 Pos, vec3 Deg);
 	GameObject(Model *newModel,int textureID, vec3 offset,vec3 degOffset, GameObject *parentNew);
 	~GameObject();
 };

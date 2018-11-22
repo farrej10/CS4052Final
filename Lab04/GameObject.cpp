@@ -62,6 +62,11 @@ void GameObject::update()
 		globalLocation = parent->globalLocation * translate(identity_mat4(),xyzPos) * rotate_x_deg(identity_mat4(), xyzDeg.v[0])
 			* rotate_y_deg(identity_mat4(), xyzDeg.v[1]) * rotate_z_deg(identity_mat4(), xyzDeg.v[2]);;
 	}
+	else
+	{
+		globalLocation = identity_mat4()  * rotate_x_deg(identity_mat4(), xyzDeg.v[0])
+			* rotate_y_deg(identity_mat4(), xyzDeg.v[1]) * rotate_z_deg(identity_mat4(), xyzDeg.v[2]) * translate(identity_mat4(), xyzPos);
+	}
 
 }
 
@@ -106,6 +111,24 @@ GameObject::GameObject(Model *newModel, int textureIDnew)
 	texture_num_loc = glGetUniformLocation(model->shaderProgramID, "texture_num");
 	light_pos_loc = glGetUniformLocation(model->shaderProgramID, "light_pos_z");
 	printf("Object Created:%s\n", model->getName());
+	update();
+}
+
+GameObject::GameObject(Model *newModel, int textureIDnew, vec3 Pos, vec3 Deg)
+{
+	model = newModel;
+	globalLocation = identity_mat4();
+	textureID = textureIDnew;
+	xyzPos = Pos;
+	xyzDeg = Deg;
+	parent = NULL;
+	matrix_location = glGetUniformLocation(model->shaderProgramID, "model_matrix");
+	view_mat_location = glGetUniformLocation(model->shaderProgramID, "view_matrix");
+	proj_mat_location = glGetUniformLocation(model->shaderProgramID, "proj_matrix");
+	texture_num_loc = glGetUniformLocation(model->shaderProgramID, "texture_num");
+	light_pos_loc = glGetUniformLocation(model->shaderProgramID, "light_pos_z");
+	printf("Object Created:%s\n", model->getName());
+	update();
 }
 
 GameObject::GameObject(Model * newModel, int textureIDnew, vec3 offset, vec3 degOffset, GameObject *parentNew)
@@ -124,6 +147,7 @@ GameObject::GameObject(Model * newModel, int textureIDnew, vec3 offset, vec3 deg
 	texture_num_loc = glGetUniformLocation(model->shaderProgramID, "texture_num");
 	light_pos_loc = glGetUniformLocation(model->shaderProgramID, "light_pos_z");
 	printf("Object Created:%s\n",model->getName());
+	update();
 }
 
 

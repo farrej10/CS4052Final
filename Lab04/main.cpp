@@ -40,6 +40,7 @@ Model *fourth;
 Model *fifth;
 
 Camera *camera;
+GameObject *terrain;
 
 int width = 800;
 int height = 600;
@@ -206,7 +207,15 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shaderProgramID);
 
+
+	//draw terrain
+	glUniform1i(terrain->texture_num_loc, terrain->textureID);
+	glBindTexture(GL_TEXTURE_2D, textures[terrain->textureID]);
+	glUniformMatrix4fv(terrain->proj_mat_location, 1, GL_FALSE, camera->persp_proj.m);
+	glUniformMatrix4fv(terrain->view_mat_location, 1, GL_FALSE, camera->view.m);
+	terrain->draw();
 	
+	//draw objects
 	for (int i = 0; i < gameObjectList.size();i++)
 	{
 		glUniform1i(gameObjectList[i]->texture_num_loc, gameObjectList[i]->textureID);
@@ -227,16 +236,35 @@ void updateScene() {
 	DWORD curr_time = timeGetTime();
 	if (last_time == 0)
 		last_time = curr_time;
-	float delta = (curr_time - last_time) * 0.001f;
-	last_time = curr_time;
+	float delta = (curr_time - last_time);
+	
 
+	//every 20ms(50fps) ish check for collision;
+	if (delta >= 20)
+	{
 
+		if (camera->xyzPos.v[1] > -1.5f)
+		{
+			camera->xyzPos.v[1] = -1.5f;
+		}
+		camera->translate_y(0.05f);
+		camera->update();
+		//printf("%f y pos\n", camera->xyzPos.v[1]);
+		last_time = curr_time;
+	}
+
+	
+
+		
+
+	
 	glutPostRedisplay();
 }
 
 
 void init()
 {
+	srand(timeGetTime());
 	// Set up the shaders
 	GLuint shaderProgramID = CompileShaders();
 	//gen and load textures textures
@@ -260,10 +288,12 @@ void init()
 	mat4 tempPer = identity_mat4();
 	tempPer = translate(tempPer, vec3(0.0, -5.0, -25.0f));
 	camera = new Camera(tempPer, perspective(70.0f, (float)width / (float)height, 0.1f, 1000.0f));
-	gameObjectList[0] = new GameObject(first,4);
-	for (int i = 1; i < gameObjectList.size(); i++)
+	terrain = new GameObject(first,4);
+	for (int i = 0; i < gameObjectList.size(); i++)
 	{
-		gameObjectList[i] = new GameObject(second,3, offset,degOffset, gameObjectList[i - 1]);
+		int posOrNeg = rand() % 2 == 0 ? -1:1;
+		int posOrNeg2 = rand() % 2 == 0 ? -1 : 1;
+		gameObjectList[i] = new GameObject(second,3,vec3((rand() % 10)*posOrNeg, 1.0f, (rand() % 10)*posOrNeg2),vec3(0.0f,0.0f,0.0f));
 	}
 
 }
@@ -275,13 +305,17 @@ void keypress(unsigned char key, int x, int y) {
 	
 	if (key == '=') {
 		//add new object to end of list with offset
-		//gameObjectList.push_back(new GameObject(first, vec3(0.0f, 1.0f, 0.0f),vec3(0.0f,0.0f,0.0f), gameObjectList.back()));
+		int posOrNeg = rand() % 2 == 0 ? -1 : 1;
+		int posOrNeg2 = rand() % 2 == 0 ? -1 : 1;
+		gameObjectList.push_back(new GameObject(second, 3, vec3((rand() % 10)*posOrNeg, 1.0f, (rand() % 10)*posOrNeg2), vec3(0.0f, 0.0f, 0.0f)));
 	}
 	if (key == '-') {
 		//add new object to end of list with offset
-		delete gameObjectList.back();
-		gameObjectList.pop_back();
-		//gameObjectList.push_back(new GameObject(first, vec3(0.0f, 3.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f), gameObjectList.back()));
+		if (gameObjectList.size() != 0)
+		{
+			delete gameObjectList.back();
+			gameObjectList.pop_back();
+		}
 	}
 
 	if (key == '1') {
@@ -295,15 +329,6 @@ void keypress(unsigned char key, int x, int y) {
 
 
 	if (key == 'w') {
-		//Translate the base, etc.
-		/*if (camera->xyzPos.v[1] > 3.5)
-		{
-			printf("%f\n", camera->xyzPos.v[1]);
-			camera->xyzPos.v[1] = 3.5f;
-			camera->translate_y(0.0f);
-		}
-		*/
-
 		camera->translate_z(0.5f);
 		camera->update();
 	}
@@ -368,7 +393,10 @@ void keypress(unsigned char key, int x, int y) {
 		//Translate the base, etc.
 		camera->reset();
 	}
-
+	if (key == 27) {
+		//Translate the base, etc.
+		glutExit();
+	}
 	
 }
 
@@ -378,7 +406,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(width, height);
-	glutCreateWindow("Hello HAND");
+	glutCreateWindow("James Farrell");
 
 	// Tell glut where the display function is
 	glutDisplayFunc(display);
