@@ -34,6 +34,7 @@ public:
 	void translate_y(GLfloat amount);
 	void translate_z(GLfloat amount);
 	void update();
+	void Fog();
 
 	//constructors
 	GameObject();

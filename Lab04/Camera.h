@@ -9,6 +9,12 @@ public:
 	mat4 resetview;
 	mat4 persp_proj;
 
+	mat4 globalLocation;
+
+	//------------
+
+	vec3 xyzPos;
+	vec3 xyzDeg;
 
 	//methods
 	void rotate_x(GLfloat amount);
@@ -17,6 +23,7 @@ public:
 	void translate_x(GLfloat amount);
 	void translate_y(GLfloat amount);
 	void translate_z(GLfloat amount);
+	void update();
 	void reset();
 
 	//constructors

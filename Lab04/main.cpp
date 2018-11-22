@@ -46,6 +46,18 @@ int height = 600;
 
 std::vector<GameObject*> gameObjectList(6);
 
+void Fog()
+{
+
+	GLfloat fogcolor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	glEnable(GL_FOG);
+	glFogi(GL_FOG_MODE, GL_EXP);
+	glFogfv(GL_FOG_COLOR, fogcolor);
+	glFogf(GL_FOG_DENSITY, 0.05f);
+	glHint(GL_FOG_HINT, GL_DONT_CARE);
+	glFogf(GL_FOG_START, -50.0f);
+	glFogf(GL_FOG_END, 10.0f);
+}
 
 // Shader Functions- click on + to expand
 #pragma region SHADER_FUNCTIONS
@@ -182,23 +194,7 @@ void loadTextures(GLuint texture, const char* filepath, int active_arg, const GL
 
 }
 
-bool   gp;                      // G Pressed? ( New )
-GLuint filter;                      // Which Filter To Use
-GLuint fogMode[] = { GL_EXP, GL_EXP2, GL_LINEAR };   // Storage For Three Types Of Fog
-GLuint fogfilter = 0;                    // Which Fog To Use
-GLfloat fogColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };      // Fog Color
-void Fog()
-{
-	glFogi(GL_FOG_MODE, fogMode[fogfilter]);
-	GLfloat fogcolor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	glEnable(GL_FOG);
-	glFogi(GL_FOG_MODE, GL_EXP);
-	glFogfv(GL_FOG_COLOR, fogcolor);
-	glFogf(GL_FOG_DENSITY, 0.5f);
-	glHint(GL_FOG_HINT, GL_DONT_CARE);
-	glFogf(GL_FOG_START, 0.0f);
-	glFogf(GL_FOG_END, 1.0f);
-}
+
 
 void display() {
 
@@ -219,7 +215,7 @@ void display() {
 		glUniformMatrix4fv(gameObjectList[i]->view_mat_location, 1, GL_FALSE, camera->view.m);
 		gameObjectList[i]->draw();
 	}
-	
+	Fog();
 	glutSwapBuffers();
 	
 }
@@ -300,82 +296,73 @@ void keypress(unsigned char key, int x, int y) {
 
 	if (key == 'w') {
 		//Translate the base, etc.
-		gameObjectList[0]->translate_y(0.5f);
+		/*if (camera->xyzPos.v[1] > 3.5)
+		{
+			printf("%f\n", camera->xyzPos.v[1]);
+			camera->xyzPos.v[1] = 3.5f;
+			camera->translate_y(0.0f);
+		}
+		*/
+
+		camera->translate_z(0.5f);
+		camera->update();
 	}
 	if (key == 's') {
 		//Translate the base, etc.
-		gameObjectList[0]->translate_y(-0.5f);
+		camera->translate_z(-0.5f);
+		camera->update();
 	}
 	if (key == 'd') {
 		//Translate the base, etc.
-		gameObjectList[0]->translate_x(0.5f);
+		camera->translate_x(-0.5f);
+		camera->update();
 	}
 	if (key == 'a') {
 		//Translate the base, etc.
-		gameObjectList[0]->translate_x(-0.5f);
+		camera->translate_x(0.5f);
+		camera->update();
 	}
 	if (key == 'e') {
 		//Translate the base, etc.
-		gameObjectList[0]->translate_z(0.5f);
+		camera->translate_y(0.5f);
+		camera->update();
 	}
 	if (key == 'q') {
 		//Translate the base, etc.
-		gameObjectList[0]->translate_z(-0.5f);
+		camera->translate_y(-0.5f); 
+		camera->update();
 	}
-
-
 	
-	if (key == '7') {
-		//Translate the base, etc.
-		camera->translate_z(1.0f);
-	}
-	/*
-	if (key == 'j') {
-		//Translate the base, etc.
-		gameObjectList[1]->translate_y(-0.5f);
-	}
-	if (key == 'k') {
-		//Translate the base, etc.
-		gameObjectList[1]->translate_x(0.5f);
-	}
-	if (key == 'h') {
-		//Translate the base, etc.
-		gameObjectList[1]->translate_x(-0.5f);
-	}
-	if (key == 'i') {
-		//Translate the base, etc.
-		gameObjectList[1]->translate_z(0.5f);
-	}
-	if (key == 'y') {
-		//Translate the base, etc.
-		gameObjectList[1]->translate_z(-0.5f);
-	}
-	*/
-
 
 	if (key == 'u') {
 		//Translate the base, etc.
-		camera->rotate_x(1.0f);
+		camera->rotate_x(5.0f);
+		camera->update();
 	}
 	if (key == 'j') {
 		//Translate the base, etc.
-		camera->rotate_x(-1.0f);
+		camera->rotate_x(-5.0f);
+		camera->update();
 	}
 	if (key == 'k') {
 		//Translate the base, etc.
-		camera->rotate_y(1.0f);
+		camera->rotate_y(5.0f);
+		camera->update();
 	}
 	if (key == 'h') {
 		//Translate the base, etc.
-		camera->rotate_y(-1.0f);
+		camera->rotate_y(-5.0f);
+		camera->update();
 	}
 	if (key == 'i') {
 		//Translate the base, etc.
-		camera->rotate_z(1.0f);
+		camera->rotate_z(5.0f);
+		camera->update();
 	}
 	if (key == 'y') {
 		//Translate the base, etc.
-		camera->rotate_z(-1.0f);
+		camera->rotate_z(-5.0f);
+		camera->update();
 	}
 	if (key == '0') {
 		//Translate the base, etc.

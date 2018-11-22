@@ -12,6 +12,7 @@ void GameObject::draw()
 	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, globalLocation.m);
 
 	glDrawArrays(GL_TRIANGLES, 0, model->modelData.mPointCount);
+	Fog();
 
 }
 
@@ -62,6 +63,18 @@ void GameObject::update()
 			* rotate_y_deg(identity_mat4(), xyzDeg.v[1]) * rotate_z_deg(identity_mat4(), xyzDeg.v[2]);;
 	}
 
+}
+
+void GameObject::Fog()
+{
+	GLfloat fogcolor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	glEnable(GL_FOG);
+	glFogi(GL_FOG_MODE, GL_EXP);
+	glFogfv(GL_FOG_COLOR, fogcolor);
+	glFogf(GL_FOG_DENSITY, 0.05f);
+	glHint(GL_FOG_HINT, GL_DONT_CARE);
+	glFogf(GL_FOG_START, 0.0f);
+	glFogf(GL_FOG_END, 5.0f);
 }
 
 
